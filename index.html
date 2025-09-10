@@ -11,23 +11,22 @@
     <meta property="og:url" content="https://1999.wtf/">
     <meta property="og:title" content="ninetynine labs">
     <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="og:image" content="https://1999.wtf/0x99faviconv3.png">
+    <meta property="og:image" content="https://1999.wtf/faviconv3.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://1999.wtf/">
     <meta property="twitter:title" content="ninetynine labs">
     <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="twitter:image" content="https://1999.wtf/0x99faviconv3.png">
+    <meta property="twitter:image" content="https://1999.wtf/faviconv3.png">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./faviconv3.png">
     <link rel="apple-touch-icon" href="./faviconv3.png">
     <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
     
-    <!-- External Scripts -->
+    <!-- External Scripts - Only Supabase -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     
     <style>
         body {
@@ -156,7 +155,7 @@
         .form-input:focus {
             outline: none;
             background-color: #ffffff;
-            color: #2C2C2C;
+            color: #000;
         }
         
         .form-input::placeholder {
@@ -186,26 +185,6 @@
         .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-        }
-        
-        .message {
-            margin-top: 20px;
-            font-size: 16px;
-            text-align: left;
-            min-height: 24px;
-            font-family: monospace;
-            color: #0000EE;
-        }
-        
-        /* Style the Turnstile widget to match retro theme */
-        .cf-turnstile {
-            border: 2px inset #e5e5e5 !important;
-            background-color: #d4d4d4 !important;
-            padding: 8px !important;
-        }
-        
-        .cf-turnstile iframe {
-            border: none !important;
         }
         
         .hidden {
@@ -242,57 +221,87 @@
             <div class="window-content">
                 <!-- About Content -->
                 <div id="about-content" class="dialog-content">
-                    <div style="color: #000; line-height: 1.6;">
-                        <p style="margin-bottom: 1em;">crypto-native creative studio connecting people and ideas in unexpected ways</p>
-                        <p style="margin-bottom: 0;">join the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">waitlist</button> and follow us on <a href="https://x.com/0xninetynine" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">twitter</a> for updates and new releases</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; color: #000; line-height: 1.6;">
+                        <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                            crypto-native creative studio connecting people and ideas in unexpected ways
+                        </div>
+                        <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                            join the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">waitlist</button> and follow us on <a href="https://x.com/0xninetynine" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">twitter</a> for updates, early access and new releases
+                        </div>
                     </div>
                 </div>
 
                 <!-- Drops Content -->
                 <div id="drops-content" class="dialog-content hidden">
                     <div style="color: #000; line-height: 1.6;">
-                        <p style="margin-bottom: 1em;">compete to <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">capture the bag</button></p>
-                        <p style="margin-bottom: 1em;">hit <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">ctrl+enter</button></p>
-                        <p style="margin-bottom: 1em;">receive a <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">handoff</button></p>
-                        <p style="margin-bottom: 1em;">send <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">mixed messages</button></p>
-                        <p style="margin-bottom: 1em;">build <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">rapport</button></p>
-                        <p style="margin-bottom: 1em;">make the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">callsheet</button></p>
-                        <p style="margin-bottom: 0;">find your <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">clique</button></p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                capture the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">bag</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                hit <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">ctrl+enter</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                receive a <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">handoff</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                send <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">mixed messages</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                build <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">rapport</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                make the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">callsheet</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                find your <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">clique</button>
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                hang in the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">atelier</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Lore Content -->
                 <div id="lore-content" class="dialog-content hidden">
                     <div style="color: #000; line-height: 1.6;">
-                        <p style="margin-bottom: 1em;">for those who still care about the <a href="https://paragraph.com/@funhouse/partying-like-its-1999" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">why</a></p>
-                        <p style="margin-bottom: 1em;">currently under construction:</p>
-                        <ul style="margin-top: 0.5em; margin-bottom: 1em; padding-left: 1.5em; list-style-type: disc;">
-                            <li style="margin-bottom: 0.25em;">networks that don't just connect people, but give them a reason to care about one another</li>
-                            <li style="margin-bottom: 0.25em;">tools that empower human-to-human interaction as a powerful engine for discovery and belonging</li>
-                            <li style="margin-bottom: 0.25em;">platforms that are a deliberate counter narrative to the noise and disposability of today's internet</li>
-                            <li style="margin-bottom: 0.25em;">experiences that allow us to max out on the real things in life that actually matter and make us who we are</li>
-                            <li style="margin-bottom: 0.25em;">love letters to the way things used to be</li>
-                        </ul>
+                        <!-- Full width box for "for those who still care about the why" -->
+                        <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6; margin-bottom: 4px;">
+                            for those who still care about the <a href="https://paragraph.com/@funhouse/partying-like-its-1999" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">why</a>
+                        </div>
+                        
+                        <!-- 2x2 Grid for first 4 items -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px;">
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                networks that don't just connect people, but give them a reason to care about one another
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                tools that empower human-to-human interaction as a powerful engine for discovery and belonging
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                platforms that are a deliberate counter narrative to the noise and disposability of today's internet
+                            </div>
+                            <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                                experiences that allow us to max out on the real things in life that actually matter and make us who we are
+                            </div>
+                        </div>
+                        
+                        <!-- Full width box for the last item -->
+                        <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
+                            love letters to the way things used to be 💌
+                        </div>
                     </div>
                 </div>
 
                 <!-- Waitlist Content -->
                 <div id="waitlist-content" class="dialog-content hidden">
-                    <div style="color: #000; line-height: 1.6;">
-                        <form id="waitlist-form">
-                            <input type="email" id="email" placeholder="email (required)" required autocomplete="email" class="form-input">
-                            <input type="text" id="eth-address" placeholder="eth address (optional)" autocomplete="off" class="form-input">
-                            <input type="text" id="sol-address" placeholder="sol address (optional)" autocomplete="off" class="form-input">
-                            
-                            <div style="margin: 15px 0;">
-                                <div class="cf-turnstile" data-sitekey="0x4AAAAAABsm5DpRM07Eih_2"></div>
-                            </div>
-                            
-                            <button type="submit" id="submit-btn" class="submit-btn">enter</button>
-                        </form>
-                        
-                        <div id="form-message" class="message"></div>
+                    <div style="color: #000;">
+                        <input type="email" id="email" placeholder="email (required)" class="form-input">
+                        <input type="text" id="eth-address" placeholder="eth address (optional)" class="form-input">  
+                        <input type="text" id="sol-address" placeholder="sol address (optional)" class="form-input">
                     </div>
+                    <button type="button" id="submit-btn" class="submit-btn" onclick="handleWaitlistSubmit(event)" style="margin-top: 11px;">enter</button>
                 </div>
             </div>
         </div>
@@ -308,7 +317,7 @@
         let currentDialog = 'about';
         let isSubmitting = false;
 
-        // Initialize Supabase (same as working debug version)
+        // Initialize Supabase
         window.addEventListener('load', () => {
             console.log('Page loaded, initializing...');
             
@@ -368,8 +377,28 @@
             });
         });
 
-        // Form submission (exact same logic as working debug)
-        document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+        // Enable/disable submit button based on email input
+        function updateSubmitButton() {
+            const email = document.getElementById('email').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (email) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Add event listener to email input
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('input', updateSubmitButton);
+            }
+        });
+
+        // Form submission handler
+        function handleWaitlistSubmit(e) {
             e.preventDefault();
             
             if (isSubmitting) return;
@@ -377,65 +406,66 @@
             const email = document.getElementById('email').value.trim();
             const ethAddress = document.getElementById('eth-address').value.trim();
             const solAddress = document.getElementById('sol-address').value.trim();
-            const messageDiv = document.getElementById('form-message');
             const submitBtn = document.getElementById('submit-btn');
             
             console.log(`Form submission attempt with email: ${email}`);
             
-            if (!email) return;
-            
-            // Check Turnstile
-            const turnstileResponse = window.turnstile?.getResponse();
-            console.log(`Turnstile response: ${turnstileResponse ? 'Got response' : 'No response'}`);
-            
-            if (!turnstileResponse) {
-                messageDiv.textContent = 'please complete the verification';
+            if (!email) {
+                alert('Please enter an email address');
                 return;
             }
             
             isSubmitting = true;
             submitBtn.textContent = '...';
             submitBtn.disabled = true;
-            messageDiv.textContent = '';
             
-            try {
-                if (!supabaseClient) {
-                    throw new Error('Database connection not available');
-                }
-                
-                console.log('Attempting to insert data...');
-                
-                const { data, error } = await supabaseClient
-                    .from('ninetynine labs waitlist')
-                    .insert([{
-                        email: email,
-                        eth_address: ethAddress || null,
-                        sol_address: solAddress || null
-                    }]);
-                
-                if (error) {
-                    console.error('Supabase error:', JSON.stringify(error));
-                    if (error.code === '23505' || error.message.includes('duplicate')) {
-                        messageDiv.textContent = "you're already on the waitlist";
-                    } else {
-                        messageDiv.textContent = `error: ${error.message}`;
+            setTimeout(async () => {
+                try {
+                    if (!supabaseClient) {
+                        throw new Error('Database connection not available');
                     }
-                } else {
-                    console.log('Insert successful!', data);
-                    messageDiv.textContent = 'welcome';
-                    document.getElementById('waitlist-form').reset();
+                    
+                    console.log('Attempting to insert data...');
+                    
+                    const { data, error } = await supabaseClient
+                        .from('ninetynine labs waitlist')
+                        .insert([{
+                            email: email,
+                            eth_address: ethAddress || null,
+                            sol_address: solAddress || null
+                        }]);
+                    
+                    if (error) {
+                        console.error('Supabase error:', JSON.stringify(error));
+                        if (error.code === '23505' || error.message.includes('duplicate')) {
+                            submitBtn.textContent = "already on list";
+                        } else {
+                            submitBtn.textContent = "error";
+                        }
+                    } else {
+                        console.log('Insert successful!', data);
+                        submitBtn.textContent = 'welcome';
+                        document.getElementById('email').value = '';
+                        document.getElementById('eth-address').value = '';
+                        document.getElementById('sol-address').value = '';
+                    }
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    submitBtn.textContent = 'error';
+                } finally {
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    
+                    // Reset button text after 2 seconds
+                    setTimeout(() => {
+                        if (submitBtn.textContent !== 'enter') {
+                            submitBtn.textContent = 'enter';
+                        }
+                    }, 2000);
                 }
-                
-            } catch (error) {
-                console.error('Submission error:', error);
-                messageDiv.textContent = `connection error: ${error.message}`;
-                messageDiv.classList.add('show');
-            } finally {
-                isSubmitting = false;
-                submitBtn.textContent = 'enter';
-                submitBtn.disabled = false;
-            }
-        });
+            }, 100);
+        }
 
         // Initialize
         showDialog('about');
