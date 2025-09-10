@@ -21,9 +21,9 @@
     <meta property="twitter:image" content="https://1999.wtf/0x99faviconv3.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./0x99faviconv3.png">
-    <link rel="apple-touch-icon" href="./0x99faviconv3.png">
-    <link rel="shortcut icon" href="./0x99faviconv3.png" type="image/png">
+    <link rel="icon" type="image/png" href="./faviconv3.png">
+    <link rel="apple-touch-icon" href="./faviconv3.png">
+    <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
     
     <!-- External Scripts -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -144,7 +144,7 @@
             font-size: 16px;
             line-height: 1.6;
             padding: 0 15px;
-            border: 2px inset #e5e5e5;
+            border: 2px outset #e5e5e5;
             border-radius: 0;
             background-color: #ffffff;
             color: #000;
@@ -424,14 +424,12 @@
                     console.log('Insert successful!', data);
                     messageDiv.textContent = 'welcome';
                     document.getElementById('waitlist-form').reset();
-                    if (window.turnstile?.reset) {
-                        window.turnstile.reset();
-                    }
                 }
                 
             } catch (error) {
                 console.error('Submission error:', error);
                 messageDiv.textContent = `connection error: ${error.message}`;
+                messageDiv.classList.add('show');
             } finally {
                 isSubmitting = false;
                 submitBtn.textContent = 'enter';
