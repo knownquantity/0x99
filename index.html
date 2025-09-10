@@ -6,8 +6,28 @@
     <title>ninetynine labs</title>
     <meta name="description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/ninetynine-labs-site/">
+    <meta property="og:title" content="ninetynine labs">
+    <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
+    <meta property="og:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourusername.github.io/ninetynine-labs-site/">
+    <meta property="twitter:title" content="ninetynine labs">
+    <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
+    <meta property="twitter:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./faviconv3.png">
+    <link rel="apple-touch-icon" href="./faviconv3.png">
+    <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
+    
     <!-- External Scripts -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -202,8 +222,12 @@
                 
                 if (!emailValue) return;
                 
-                // SKIP TURNSTILE CHECK FOR TESTING
-                console.log('Skipping Turnstile verification for testing...');
+                // Check Cloudflare Turnstile
+                const turnstileResponse = window.turnstile?.getResponse();
+                if (!turnstileResponse) {
+                    setMessage('please complete the verification');
+                    return;
+                }
                 
                 setIsSubmitting(true);
                 setMessage('');
@@ -214,8 +238,6 @@
                         throw new Error('Database connection not available');
                     }
 
-                    console.log('Attempting to insert data...');
-                    
                     // Insert data into Supabase
                     const { data, error } = await window.supabaseClient
                         .from('ninetynine labs waitlist')
@@ -228,7 +250,6 @@
                         ]);
                     
                     if (error) {
-                        console.error('Supabase error:', error);
                         // Check if it's a duplicate email error
                         if (error.code === '23505' || error.message.includes('duplicate')) {
                             setMessage("you're already on the waitlist");
@@ -236,11 +257,14 @@
                             setMessage(`error: ${error.message}`);
                         }
                     } else {
-                        console.log('Success!', data);
                         setMessage("welcome");
                         setEmail('');
                         setEthAddress('');
                         setSolAddress('');
+                        // Reset Turnstile
+                        if (window.turnstile?.reset) {
+                            window.turnstile.reset();
+                        }
                     }
                     
                 } catch (error) {
@@ -280,8 +304,8 @@
                             className="form-input"
                         />
                         
-                        <div style={{ margin: '15px 0', padding: '10px', background: '#ffffcc', border: '1px solid #ffcc00', fontSize: '12px' }}>
-                            ⚠️ Testing mode - CAPTCHA disabled
+                        <div style={{ margin: '15px 0' }}>
+                            <div className="cf-turnstile" data-sitekey="0x4AAAAAABsm5DpRM07Eih_2"></div>
                         </div>
                         
                         <button 
@@ -313,7 +337,7 @@
                     
                     if (window.supabase) {
                         window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                        console.log('Supabase client initialized successfully');
+                        console.log('Supabase client initialized');
                     } else {
                         console.error('Supabase library not loaded');
                     }
