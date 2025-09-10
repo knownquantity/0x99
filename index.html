@@ -250,6 +250,17 @@
                 margin: 0 10px 4px 10px !important;
             }
             
+            /* Fix hyperlink size in mobile boxes - more specific targeting */
+            .dialog-content div[style*="padding: 8px"] button[onclick] {
+                font-size: 15px !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* Fix lore section top box width - target the specific structure */
+            #lore-content div[style*="margin-bottom: 4px"]:first-child {
+                margin: 0 10px 4px 10px !important;
+            }
+            
             h1 {
                 font-size: 24px !important;
                 margin-left: 10px !important;
