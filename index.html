@@ -8,24 +8,25 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://1999.wtf/">
+    <meta property="og:url" content="https://yourusername.github.io/ninetynine-labs-site/">
     <meta property="og:title" content="ninetynine labs">
     <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="og:image" content="https://1999.wtf/1999v3.png">
+    <meta property="og:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://noahmclaugh1in.github.io/holdco/">
+    <meta property="twitter:url" content="https://yourusername.github.io/ninetynine-labs-site/">
     <meta property="twitter:title" content="ninetynine labs">
     <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="twitter:image" content="https://1999.wtf/1999v3.png">
+    <meta property="twitter:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/faviconv3.png">
-    <link rel="apple-touch-icon" href="/faviconv3.png">
+    <link rel="icon" type="image/png" href="./faviconv3.png">
+    <link rel="apple-touch-icon" href="./faviconv3.png">
+    <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
     
+    <!-- External Scripts -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <!-- Cloudflare Turnstile Script -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -135,7 +136,6 @@
             border-top: 1px solid #ccc;
         }
 
-        /* Waitlist Form Styles */
         .form-input {
             width: 100%;
             height: 40px;
@@ -223,7 +223,7 @@
                 if (!emailValue) return;
                 
                 // Check Cloudflare Turnstile
-                const turnstileResponse = window.turnstile.getResponse();
+                const turnstileResponse = window.turnstile?.getResponse();
                 if (!turnstileResponse) {
                     setMessage('please complete the verification');
                     return;
@@ -233,6 +233,11 @@
                 setMessage('');
                 
                 try {
+                    // Check if Supabase is available
+                    if (!window.supabaseClient) {
+                        throw new Error('Database connection not available');
+                    }
+
                     // Insert data into Supabase
                     const { data, error } = await window.supabaseClient
                         .from('ninetynine labs waitlist')
@@ -257,13 +262,15 @@
                         setEthAddress('');
                         setSolAddress('');
                         // Reset Turnstile
-                        window.turnstile.reset();
+                        if (window.turnstile?.reset) {
+                            window.turnstile.reset();
+                        }
                     }
                     
                 } catch (error) {
+                    console.error('Submission error:', error);
                     setMessage(`connection error: ${error.message}`);
                 } finally {
-                    // Re-enable form
                     setIsSubmitting(false);
                 }
             };
@@ -323,10 +330,20 @@
             const [activeDialog, setActiveDialog] = useState('about');
 
             useEffect(() => {
-                // Initialize Supabase client using the exact same approach as the working site
-                const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
-                window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                // Initialize Supabase client
+                try {
+                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+                    
+                    if (window.supabase) {
+                        window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                        console.log('Supabase client initialized');
+                    } else {
+                        console.error('Supabase library not loaded');
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize Supabase:', error);
+                }
             }, []);
 
             const handleButtonClick = (buttonType) => {
@@ -396,7 +413,6 @@
 
             return (
                 <div className="fixed-container">
-                    {/* Main Window */}
                     <div className="main-window">
                         <div className="window-bar">
                             <div className="window-titlebar-text">welcome</div>
@@ -447,7 +463,6 @@
                         </div>
                     </div>
                     
-                    {/* Dialog Window */}
                     <div className="dialog-window">
                         <div className="window-bar">
                             <div className="window-titlebar-text">
@@ -475,7 +490,6 @@
                         </div>
                     </div>
                     
-                    {/* Footer */}
                     <div className="footer">
                         © 2025 1999 labs. all rights reserved.
                     </div>
