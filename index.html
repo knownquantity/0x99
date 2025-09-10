@@ -8,24 +8,24 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourusername.github.io/ninetynine-labs-site/">
+    <meta property="og:url" content="https://1999.wtf/">
     <meta property="og:title" content="ninetynine labs">
     <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="og:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
+    <meta property="og:image" content="https://1999.wtf/0x99faviconv3.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yourusername.github.io/ninetynine-labs-site/">
+    <meta property="twitter:url" content="https://1999.wtf/">
     <meta property="twitter:title" content="ninetynine labs">
     <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="twitter:image" content="https://yourusername.github.io/ninetynine-labs-site/0x99faviconv3.png">
+    <meta property="twitter:image" content="https://1999.wtf/0x99faviconv3.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./0x99faviconv3.png">
-    <link rel="apple-touch-icon" href="./0x99faviconv3.png">
-    <link rel="shortcut icon" href="./0x99faviconv3.png" type="image/png">
+    <link rel="icon" type="image/png" href="./faviconv3.png">
+    <link rel="apple-touch-icon" href="./faviconv3.png">
+    <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
     
-    <!-- External Scripts -->
+    <!-- External Scripts - Same order as working debug -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -201,6 +201,28 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // Initialize Supabase client globally (like debug version)
+        let supabaseClient = null;
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('Page loaded, initializing Supabase...');
+            try {
+                const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+                
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                    window.supabaseClient = supabaseClient; // Also set on window for compatibility
+                    console.log('Supabase client initialized successfully');
+                } else {
+                    console.error('Supabase library not loaded');
+                }
+            } catch (error) {
+                console.error('Failed to initialize Supabase:', error);
+            }
+        });
+
         const WaitlistForm = () => {
             const [email, setEmail] = useState('');
             const [ethAddress, setEthAddress] = useState('');
@@ -220,10 +242,14 @@
                 const ethValue = ethAddress.trim();
                 const solValue = solAddress.trim();
                 
+                console.log(`Form submission attempt with email: ${emailValue}`);
+                
                 if (!emailValue) return;
                 
                 // Check Cloudflare Turnstile
                 const turnstileResponse = window.turnstile?.getResponse();
+                console.log(`Turnstile response: ${turnstileResponse ? 'Got response' : 'No response'}`);
+                
                 if (!turnstileResponse) {
                     setMessage('please complete the verification');
                     return;
@@ -234,12 +260,15 @@
                 
                 try {
                     // Check if Supabase is available
-                    if (!window.supabaseClient) {
+                    if (!supabaseClient && !window.supabaseClient) {
                         throw new Error('Database connection not available');
                     }
+                    
+                    const client = supabaseClient || window.supabaseClient;
+                    console.log('Attempting to insert data...');
 
-                    // Insert data into Supabase
-                    const { data, error } = await window.supabaseClient
+                    // Insert data into Supabase (same as debug version)
+                    const { data, error } = await client
                         .from('ninetynine labs waitlist')
                         .insert([
                             { 
@@ -250,6 +279,7 @@
                         ]);
                     
                     if (error) {
+                        console.error('Supabase error:', JSON.stringify(error));
                         // Check if it's a duplicate email error
                         if (error.code === '23505' || error.message.includes('duplicate')) {
                             setMessage("you're already on the waitlist");
@@ -257,6 +287,7 @@
                             setMessage(`error: ${error.message}`);
                         }
                     } else {
+                        console.log('Insert successful!', data);
                         setMessage("welcome");
                         setEmail('');
                         setEthAddress('');
@@ -328,23 +359,6 @@
 
         function App() {
             const [activeDialog, setActiveDialog] = useState('about');
-
-            useEffect(() => {
-                // Initialize Supabase client
-                try {
-                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
-                    
-                    if (window.supabase) {
-                        window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                        console.log('Supabase client initialized');
-                    } else {
-                        console.error('Supabase library not loaded');
-                    }
-                } catch (error) {
-                    console.error('Failed to initialize Supabase:', error);
-                }
-            }, []);
 
             const handleButtonClick = (buttonType) => {
                 if (activeDialog === buttonType) {
