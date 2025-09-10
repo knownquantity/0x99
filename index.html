@@ -4,11 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ninetynine labs</title>
+    <meta name="description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://1999.wtf/">
+    <meta property="og:title" content="ninetynine labs">
+    <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
+    <meta property="og:image" content="https://1999.wtf/1999v3.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://noahmclaugh1in.github.io/holdco/">
+    <meta property="twitter:title" content="ninetynine labs">
+    <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
+    <meta property="twitter:image" content="https://1999.wtf/1999v3.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/0x99faviconv3.png">
+    <link rel="apple-touch-icon" href="/0x99faviconv3.png">
+    
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- Cloudflare Turnstile Script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    
     <style>
         body {
             margin: 0;
@@ -103,6 +125,74 @@
             flex: 1;
             margin-left: 8px;
         }
+        
+        .footer {
+            margin-top: 2rem;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Waitlist Form Styles */
+        .form-input {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            padding: 0 15px;
+            border: 1px solid #000000;
+            border-radius: 0;
+            background-color: #ffffff;
+            color: #2C2C2C;
+            font-family: monospace;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            background-color: #ffffff;
+            color: #2C2C2C;
+        }
+        
+        .form-input::placeholder {
+            color: #666666;
+        }
+        
+        .submit-btn {
+            background-color: #d4d4d4;
+            border: 2px outset #e5e5e5;
+            font-family: monospace;
+            text-transform: lowercase;
+            color: #000;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .submit-btn:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .submit-btn:active {
+            background-color: #c4c4c4;
+            border-style: inset;
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: left;
+            min-height: 24px;
+            font-family: monospace;
+            color: #0000EE;
+        }
     </style>
 </head>
 <body>
@@ -132,50 +222,48 @@
                 
                 if (!emailValue) return;
                 
-                if (window.turnstile) {
-                    const turnstileResponse = window.turnstile.getResponse();
-                    if (!turnstileResponse) {
-                        setMessage('please complete the verification');
-                        return;
-                    }
+                // Check Cloudflare Turnstile
+                const turnstileResponse = window.turnstile.getResponse();
+                if (!turnstileResponse) {
+                    setMessage('please complete the verification');
+                    return;
                 }
                 
                 setIsSubmitting(true);
                 setMessage('');
                 
                 try {
-                    if (window.supabaseClient) {
-                        const { data, error } = await window.supabaseClient
-                            .from('ninetynine labs waitlist')
-                            .insert([
-                                { 
-                                    email: emailValue,
-                                    eth_address: ethValue || null,
-                                    sol_address: solValue || null
-                                }
-                            ]);
-                        
-                        if (error) {
-                            if (error.code === '23505' || error.message.includes('duplicate')) {
-                                setMessage("you're already on the waitlist");
-                            } else {
-                                setMessage(`error: ${error.message}`);
+                    // Insert data into Supabase
+                    const { data, error } = await window.supabaseClient
+                        .from('ninetynine labs waitlist')
+                        .insert([
+                            { 
+                                email: emailValue,
+                                eth_address: ethValue || null,
+                                sol_address: solValue || null
                             }
+                        ]);
+                    
+                    if (error) {
+                        // Check if it's a duplicate email error
+                        if (error.code === '23505' || error.message.includes('duplicate')) {
+                            setMessage("you're already on the waitlist");
                         } else {
-                            setMessage("welcome");
-                            setEmail('');
-                            setEthAddress('');
-                            setSolAddress('');
-                            if (window.turnstile) {
-                                window.turnstile.reset();
-                            }
+                            setMessage(`error: ${error.message}`);
                         }
                     } else {
-                        setMessage('service not available');
+                        setMessage("welcome");
+                        setEmail('');
+                        setEthAddress('');
+                        setSolAddress('');
+                        // Reset Turnstile
+                        window.turnstile.reset();
                     }
+                    
                 } catch (error) {
                     setMessage(`connection error: ${error.message}`);
                 } finally {
+                    // Re-enable form
                     setIsSubmitting(false);
                 }
             };
@@ -183,63 +271,31 @@
             return (
                 <div style={{ color: '#000', lineHeight: '1.6' }}>
                     <form onSubmit={handleSubmit}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
-                            <input 
-                                type="email" 
-                                value={email}
-                                onChange={(e) => { setEmail(e.target.value); setMessage(''); }}
-                                placeholder="email (required)" 
-                                required
-                                autoComplete="email"
-                                style={{
-                                    width: '100%',
-                                    height: '40px',
-                                    fontSize: '14px',
-                                    padding: '0 10px',
-                                    border: '1px solid #000',
-                                    fontFamily: 'monospace',
-                                    backgroundColor: '#ffffff',
-                                    color: '#000',
-                                    boxSizing: 'border-box'
-                                }}
-                            />
-                            <input 
-                                type="text" 
-                                value={ethAddress}
-                                onChange={(e) => { setEthAddress(e.target.value); setMessage(''); }}
-                                placeholder="eth address (optional)" 
-                                autoComplete="off"
-                                style={{
-                                    width: '100%',
-                                    height: '40px',
-                                    fontSize: '14px',
-                                    padding: '0 10px',
-                                    border: '1px solid #000',
-                                    fontFamily: 'monospace',
-                                    backgroundColor: '#ffffff',
-                                    color: '#000',
-                                    boxSizing: 'border-box'
-                                }}
-                            />
-                            <input 
-                                type="text" 
-                                value={solAddress}
-                                onChange={(e) => { setSolAddress(e.target.value); setMessage(''); }}
-                                placeholder="sol address (optional)" 
-                                autoComplete="off"
-                                style={{
-                                    width: '100%',
-                                    height: '40px',
-                                    fontSize: '14px',
-                                    padding: '0 10px',
-                                    border: '1px solid #000',
-                                    fontFamily: 'monospace',
-                                    backgroundColor: '#ffffff',
-                                    color: '#000',
-                                    boxSizing: 'border-box'
-                                }}
-                            />
-                        </div>
+                        <input 
+                            type="email" 
+                            value={email}
+                            onChange={(e) => { setEmail(e.target.value); setMessage(''); }}
+                            placeholder="email (required)" 
+                            required
+                            autoComplete="email"
+                            className="form-input"
+                        />
+                        <input 
+                            type="text" 
+                            value={ethAddress}
+                            onChange={(e) => { setEthAddress(e.target.value); setMessage(''); }}
+                            placeholder="eth address (optional)" 
+                            autoComplete="off"
+                            className="form-input"
+                        />
+                        <input 
+                            type="text" 
+                            value={solAddress}
+                            onChange={(e) => { setSolAddress(e.target.value); setMessage(''); }}
+                            placeholder="sol address (optional)" 
+                            autoComplete="off"
+                            className="form-input"
+                        />
                         
                         <div style={{ margin: '15px 0' }}>
                             <div className="cf-turnstile" data-sitekey="0x4AAAAAABsm5DpRM07Eih_2"></div>
@@ -248,28 +304,14 @@
                         <button 
                             type="submit"
                             disabled={!submitButtonEnabled || isSubmitting}
-                            style={{
-                                backgroundColor: (!submitButtonEnabled || isSubmitting) ? '#999' : '#d4d4d4',
-                                border: '2px outset #e5e5e5',
-                                fontFamily: 'monospace',
-                                textTransform: 'lowercase',
-                                color: '#000',
-                                padding: '8px 16px',
-                                cursor: (!submitButtonEnabled || isSubmitting) ? 'not-allowed' : 'pointer',
-                                opacity: (!submitButtonEnabled || isSubmitting) ? 0.6 : 1
-                            }}
+                            className="submit-btn"
                         >
                             {isSubmitting ? '...' : 'enter'}
                         </button>
                     </form>
                     
                     {message && (
-                        <div style={{ 
-                            marginTop: '20px', 
-                            fontSize: '14px', 
-                            fontFamily: 'monospace',
-                            color: '#0000EE'
-                        }}>
+                        <div className="message">
                             {message}
                         </div>
                     )}
@@ -281,11 +323,10 @@
             const [activeDialog, setActiveDialog] = useState('about');
 
             useEffect(() => {
-                if (window.supabase) {
-                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
-                    window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                }
+                // Initialize Supabase client using the exact same approach as the working site
+                const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+                window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
             }, []);
 
             const handleButtonClick = (buttonType) => {
@@ -432,6 +473,11 @@
                         <div className="window-content">
                             {getDialogContent(activeDialog || 'about')}
                         </div>
+                    </div>
+                    
+                    {/* Footer */}
+                    <div className="footer">
+                        © 2025 ninetynine labs. all rights reserved.
                     </div>
                 </div>
             );
