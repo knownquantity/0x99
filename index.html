@@ -11,14 +11,14 @@
     <meta property="og:url" content="https://1999.wtf/">
     <meta property="og:title" content="ninetynine labs">
     <meta property="og:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="og:image" content="https://1999.wtf/1999v3.png">
+    <meta property="og:image" content="https://1999.wtf/faviconv3.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://1999.wtf/">
     <meta property="twitter:title" content="ninetynine labs">
     <meta property="twitter:description" content="crypto-native creative studio connecting people and ideas in unexpected ways">
-    <meta property="twitter:image" content="https://1999.wtf/1999v3.png">
+    <meta property="twitter:image" content="https://1999.wtf/faviconv3.png">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./faviconv3.png">
@@ -189,6 +189,88 @@
         
         .hidden {
             display: none;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .fixed-container {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            
+            .window-content {
+                padding: 16px 12px;
+            }
+            
+            .main-window, .dialog-window {
+                max-width: 100%;
+            }
+            
+            /* Stack buttons vertically on mobile */
+            .main-window .window-content > div[style*="display: flex"] {
+                flex-direction: column !important;
+                gap: 2px !important;
+            }
+            
+            .retro-button {
+                width: 100% !important;
+                flex: none !important;
+            }
+            
+            /* Make grid single column on mobile */
+            div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Larger text on mobile */
+            .form-input {
+                font-size: 16px;
+                height: 44px;
+                padding: 0 12px;
+            }
+            
+            .submit-btn {
+                font-size: 16px;
+                padding: 12px 20px;
+                min-height: 44px;
+            }
+            
+            /* Better spacing for content boxes */
+            div[style*="padding: 8px"] {
+                padding: 12px !important;
+                font-size: 15px !important;
+                line-height: 1.5 !important;
+            }
+            
+            h1 {
+                font-size: 24px !important;
+            }
+            
+            .footer {
+                margin-top: 0.5rem;
+                padding: 15px;
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .fixed-container {
+                padding: 0.25rem;
+            }
+            
+            .window-content {
+                padding: 12px 8px;
+            }
+            
+            h1 {
+                font-size: 20px !important;
+                margin-bottom: 8px !important;
+            }
+            
+            div[style*="padding: 8px"] {
+                padding: 10px !important;
+                font-size: 14px !important;
+            }
         }
     </style>
 </head>
