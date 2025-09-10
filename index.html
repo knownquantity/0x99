@@ -21,16 +21,13 @@
     <meta property="twitter:image" content="https://1999.wtf/0x99faviconv3.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./faviconv3.png">
-    <link rel="apple-touch-icon" href="./faviconv3.png">
-    <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
+    <link rel="icon" type="image/png" href="./0x99faviconv3.png">
+    <link rel="apple-touch-icon" href="./0x99faviconv3.png">
+    <link rel="shortcut icon" href="./0x99faviconv3.png" type="image/png">
     
-    <!-- External Scripts - Same order as working debug -->
+    <!-- External Scripts -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     
     <style>
         body {
@@ -116,6 +113,11 @@
             background-color: #c4c4c4;
         }
         
+        .retro-button.active {
+            background-color: #0000EE;
+            color: #ffffff;
+        }
+        
         .window-titlebar-text {
             font-size: 12px;
             color: #ffffff;
@@ -193,325 +195,234 @@
             font-family: monospace;
             color: #0000EE;
         }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        // Initialize Supabase client globally (like debug version)
-        let supabaseClient = null;
-        
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            console.log('Page loaded, initializing Supabase...');
-            try {
-                const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+    <div class="fixed-container">
+        <!-- Main Window -->
+        <div class="main-window">
+            <div class="window-bar">
+                <div class="window-titlebar-text">welcome</div>
+            </div>
+            <div class="window-content">
+                <div style="text-align: left;">
+                    <h1 style="font-size: 28px; margin-bottom: 10px; font-weight: normal;">ninetynine labs</h1>
+                </div>
                 
-                if (window.supabase) {
-                    supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                    window.supabaseClient = supabaseClient; // Also set on window for compatibility
-                    console.log('Supabase client initialized successfully');
-                } else {
-                    console.error('Supabase library not loaded');
+                <div style="display: flex; gap: 4px;">
+                    <button class="retro-button" data-dialog="drops" style="width: auto; flex: 1;">drops</button>
+                    <button class="retro-button" data-dialog="lore" style="width: auto; flex: 1;">lore</button>
+                    <button class="retro-button" data-dialog="waitlist" style="width: auto; flex: 1;">waitlist</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dialog Window -->
+        <div class="dialog-window">
+            <div class="window-bar">
+                <div class="window-titlebar-text" id="dialog-title">about</div>
+                <button onclick="showDialog('about')" style="background: none; border: none; color: #ffffff; display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; cursor: pointer;">✕</button>
+            </div>
+            <div class="window-content">
+                <!-- About Content -->
+                <div id="about-content" class="dialog-content">
+                    <div style="color: #000; line-height: 1.6;">
+                        <p style="margin-bottom: 1em;">crypto-native creative studio connecting people and ideas in unexpected ways</p>
+                        <p style="margin-bottom: 0;">join the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">waitlist</button> and follow us on <a href="https://x.com/0xninetynine" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">twitter</a> for updates and new releases</p>
+                    </div>
+                </div>
+
+                <!-- Drops Content -->
+                <div id="drops-content" class="dialog-content hidden">
+                    <div style="color: #000; line-height: 1.6;">
+                        <p style="margin-bottom: 1em;">compete to <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">capture the bag</button></p>
+                        <p style="margin-bottom: 1em;">hit <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">ctrl+enter</button></p>
+                        <p style="margin-bottom: 1em;">receive a <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">handoff</button></p>
+                        <p style="margin-bottom: 1em;">send <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">mixed messages</button></p>
+                        <p style="margin-bottom: 1em;">build <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">rapport</button></p>
+                        <p style="margin-bottom: 1em;">make the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">callsheet</button></p>
+                        <p style="margin-bottom: 0;">find your <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">clique</button></p>
+                    </div>
+                </div>
+
+                <!-- Lore Content -->
+                <div id="lore-content" class="dialog-content hidden">
+                    <div style="color: #000; line-height: 1.6;">
+                        <p style="margin-bottom: 1em;">for those who still care about the <a href="https://paragraph.com/@funhouse/partying-like-its-1999" target="_blank" rel="noopener noreferrer" style="color: #0000EE; text-decoration: underline;">why</a></p>
+                        <p style="margin-bottom: 1em;">currently under construction:</p>
+                        <ul style="margin-top: 0.5em; margin-bottom: 1em; padding-left: 1.5em; list-style-type: disc;">
+                            <li style="margin-bottom: 0.25em;">networks that don't just connect people, but give them a reason to care about one another</li>
+                            <li style="margin-bottom: 0.25em;">tools that empower human-to-human interaction as a powerful engine for discovery and belonging</li>
+                            <li style="margin-bottom: 0.25em;">platforms that are a deliberate counter narrative to the noise and disposability of today's internet</li>
+                            <li style="margin-bottom: 0.25em;">experiences that allow us to max out on the real things in life that actually matter and make us who we are</li>
+                            <li style="margin-bottom: 0.25em;">love letters to the way things used to be</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Waitlist Content -->
+                <div id="waitlist-content" class="dialog-content hidden">
+                    <div style="color: #000; line-height: 1.6;">
+                        <form id="waitlist-form">
+                            <input type="email" id="email" placeholder="email (required)" required autocomplete="email" class="form-input">
+                            <input type="text" id="eth-address" placeholder="eth address (optional)" autocomplete="off" class="form-input">
+                            <input type="text" id="sol-address" placeholder="sol address (optional)" autocomplete="off" class="form-input">
+                            
+                            <div style="margin: 15px 0;">
+                                <div class="cf-turnstile" data-sitekey="0x4AAAAAABsm5DpRM07Eih_2"></div>
+                            </div>
+                            
+                            <button type="submit" id="submit-btn" class="submit-btn">enter</button>
+                        </form>
+                        
+                        <div id="form-message" class="message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            © 2025 1999 labs. all rights reserved.
+        </div>
+    </div>
+
+    <script>
+        let supabaseClient = null;
+        let currentDialog = 'about';
+        let isSubmitting = false;
+
+        // Initialize Supabase (same as working debug version)
+        window.addEventListener('load', () => {
+            console.log('Page loaded, initializing...');
+            
+            setTimeout(() => {
+                try {
+                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+                    
+                    if (window.supabase) {
+                        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                        console.log('Supabase client initialized');
+                    } else {
+                        console.error('Supabase library not loaded');
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize Supabase:', error);
                 }
+            }, 500);
+        });
+
+        // Dialog management
+        function showDialog(type) {
+            currentDialog = type;
+            
+            // Hide all content
+            document.querySelectorAll('.dialog-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show selected content
+            document.getElementById(`${type}-content`).classList.remove('hidden');
+            
+            // Update title
+            document.getElementById('dialog-title').textContent = type;
+            
+            // Update button states
+            document.querySelectorAll('.retro-button[data-dialog]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (type !== 'about') {
+                document.querySelector(`[data-dialog="${type}"]`)?.classList.add('active');
+            }
+        }
+
+        // Button click handlers
+        document.querySelectorAll('.retro-button[data-dialog]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const dialogType = e.target.getAttribute('data-dialog');
+                showDialog(dialogType);
+            });
+        });
+
+        // Form submission (exact same logic as working debug)
+        document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isSubmitting) return;
+            
+            const email = document.getElementById('email').value.trim();
+            const ethAddress = document.getElementById('eth-address').value.trim();
+            const solAddress = document.getElementById('sol-address').value.trim();
+            const messageDiv = document.getElementById('form-message');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            console.log(`Form submission attempt with email: ${email}`);
+            
+            if (!email) return;
+            
+            // Check Turnstile
+            const turnstileResponse = window.turnstile?.getResponse();
+            console.log(`Turnstile response: ${turnstileResponse ? 'Got response' : 'No response'}`);
+            
+            if (!turnstileResponse) {
+                messageDiv.textContent = 'please complete the verification';
+                return;
+            }
+            
+            isSubmitting = true;
+            submitBtn.textContent = '...';
+            submitBtn.disabled = true;
+            messageDiv.textContent = '';
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Database connection not available');
+                }
+                
+                console.log('Attempting to insert data...');
+                
+                const { data, error } = await supabaseClient
+                    .from('ninetynine labs waitlist')
+                    .insert([{
+                        email: email,
+                        eth_address: ethAddress || null,
+                        sol_address: solAddress || null
+                    }]);
+                
+                if (error) {
+                    console.error('Supabase error:', JSON.stringify(error));
+                    if (error.code === '23505' || error.message.includes('duplicate')) {
+                        messageDiv.textContent = "you're already on the waitlist";
+                    } else {
+                        messageDiv.textContent = `error: ${error.message}`;
+                    }
+                } else {
+                    console.log('Insert successful!', data);
+                    messageDiv.textContent = 'welcome';
+                    document.getElementById('waitlist-form').reset();
+                    if (window.turnstile?.reset) {
+                        window.turnstile.reset();
+                    }
+                }
+                
             } catch (error) {
-                console.error('Failed to initialize Supabase:', error);
+                console.error('Submission error:', error);
+                messageDiv.textContent = `connection error: ${error.message}`;
+            } finally {
+                isSubmitting = false;
+                submitBtn.textContent = 'enter';
+                submitBtn.disabled = false;
             }
         });
 
-        const WaitlistForm = () => {
-            const [email, setEmail] = useState('');
-            const [ethAddress, setEthAddress] = useState('');
-            const [solAddress, setSolAddress] = useState('');
-            const [message, setMessage] = useState('');
-            const [isSubmitting, setIsSubmitting] = useState(false);
-            const [submitButtonEnabled, setSubmitButtonEnabled] = useState(false);
-
-            useEffect(() => {
-                setSubmitButtonEnabled(email.trim() !== '');
-            }, [email]);
-
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                
-                const emailValue = email.trim();
-                const ethValue = ethAddress.trim();
-                const solValue = solAddress.trim();
-                
-                console.log(`Form submission attempt with email: ${emailValue}`);
-                
-                if (!emailValue) return;
-                
-                // Check Cloudflare Turnstile
-                const turnstileResponse = window.turnstile?.getResponse();
-                console.log(`Turnstile response: ${turnstileResponse ? 'Got response' : 'No response'}`);
-                
-                if (!turnstileResponse) {
-                    setMessage('please complete the verification');
-                    return;
-                }
-                
-                setIsSubmitting(true);
-                setMessage('');
-                
-                try {
-                    // Check if Supabase is available
-                    if (!supabaseClient && !window.supabaseClient) {
-                        throw new Error('Database connection not available');
-                    }
-                    
-                    const client = supabaseClient || window.supabaseClient;
-                    console.log('Attempting to insert data...');
-
-                    // Insert data into Supabase (same as debug version)
-                    const { data, error } = await client
-                        .from('ninetynine labs waitlist')
-                        .insert([
-                            { 
-                                email: emailValue,
-                                eth_address: ethValue || null,
-                                sol_address: solValue || null
-                            }
-                        ]);
-                    
-                    if (error) {
-                        console.error('Supabase error:', JSON.stringify(error));
-                        // Check if it's a duplicate email error
-                        if (error.code === '23505' || error.message.includes('duplicate')) {
-                            setMessage("you're already on the waitlist");
-                        } else {
-                            setMessage(`error: ${error.message}`);
-                        }
-                    } else {
-                        console.log('Insert successful!', data);
-                        setMessage("welcome");
-                        setEmail('');
-                        setEthAddress('');
-                        setSolAddress('');
-                        // Reset Turnstile
-                        if (window.turnstile?.reset) {
-                            window.turnstile.reset();
-                        }
-                    }
-                    
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    setMessage(`connection error: ${error.message}`);
-                } finally {
-                    setIsSubmitting(false);
-                }
-            };
-
-            return (
-                <div style={{ color: '#000', lineHeight: '1.6' }}>
-                    <form onSubmit={handleSubmit}>
-                        <input 
-                            type="email" 
-                            value={email}
-                            onChange={(e) => { setEmail(e.target.value); setMessage(''); }}
-                            placeholder="email (required)" 
-                            required
-                            autoComplete="email"
-                            className="form-input"
-                        />
-                        <input 
-                            type="text" 
-                            value={ethAddress}
-                            onChange={(e) => { setEthAddress(e.target.value); setMessage(''); }}
-                            placeholder="eth address (optional)" 
-                            autoComplete="off"
-                            className="form-input"
-                        />
-                        <input 
-                            type="text" 
-                            value={solAddress}
-                            onChange={(e) => { setSolAddress(e.target.value); setMessage(''); }}
-                            placeholder="sol address (optional)" 
-                            autoComplete="off"
-                            className="form-input"
-                        />
-                        
-                        <div style={{ margin: '15px 0' }}>
-                            <div className="cf-turnstile" data-sitekey="0x4AAAAAABsm5DpRM07Eih_2"></div>
-                        </div>
-                        
-                        <button 
-                            type="submit"
-                            disabled={!submitButtonEnabled || isSubmitting}
-                            className="submit-btn"
-                        >
-                            {isSubmitting ? '...' : 'enter'}
-                        </button>
-                    </form>
-                    
-                    {message && (
-                        <div className="message">
-                            {message}
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        function App() {
-            const [activeDialog, setActiveDialog] = useState('about');
-
-            const handleButtonClick = (buttonType) => {
-                if (activeDialog === buttonType) {
-                    setActiveDialog(null);
-                } else {
-                    setActiveDialog(buttonType);
-                }
-            };
-
-            const handleDialogClose = () => {
-                setActiveDialog(null);
-            };
-
-            const getDialogTitle = (type) => {
-                switch (type) {
-                    case 'drops':
-                        return 'drops';
-                    case 'lore':
-                        return 'lore';
-                    case 'waitlist':
-                        return 'waitlist';
-                    default:
-                        return 'about';
-                }
-            };
-
-            const getDialogContent = (type) => {
-                switch (type) {
-                    case 'drops':
-                        return (
-                            <div style={{ color: '#000', lineHeight: '1.6' }}>
-                                <p style={{ marginBottom: '1em' }}>compete to <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>capture the bag</button></p>
-                                <p style={{ marginBottom: '1em' }}>hit <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>ctrl+enter</button></p>
-                                <p style={{ marginBottom: '1em' }}>receive a <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>handoff</button></p>
-                                <p style={{ marginBottom: '1em' }}>send <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>mixed messages</button></p>
-                                <p style={{ marginBottom: '1em' }}>build <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>rapport</button></p>
-                                <p style={{ marginBottom: '1em' }}>make the <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>callsheet</button></p>
-                                <p style={{ marginBottom: '0' }}>find your <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>clique</button></p>
-                            </div>
-                        );
-                    case 'lore':
-                        return (
-                            <div style={{ color: '#000', lineHeight: '1.6' }}>
-                                <p style={{ marginBottom: '1em' }}>for those who still care about the <a href="https://paragraph.com/@funhouse/partying-like-its-1999" target="_blank" rel="noopener noreferrer" style={{ color: '#0000EE', textDecoration: 'underline' }}>why</a></p>
-                                <p style={{ marginBottom: '1em' }}>currently under construction:</p>
-                                <ul style={{ marginTop: '0.5em', marginBottom: '1em', paddingLeft: '1.5em', listStyleType: 'disc' }}>
-                                    <li style={{ marginBottom: '0.25em' }}>networks that don't just connect people, but give them a reason to care about one another</li>
-                                    <li style={{ marginBottom: '0.25em' }}>tools that empower human-to-human interaction as a powerful engine for discovery and belonging</li>
-                                    <li style={{ marginBottom: '0.25em' }}>platforms that are a deliberate counter narrative to the noise and disposability of today's internet</li>
-                                    <li style={{ marginBottom: '0.25em' }}>experiences that allow us to max out on the real things in life that actually matter and make us who we are</li>
-                                    <li style={{ marginBottom: '0.25em' }}>love letters to the way things used to be</li>
-                                </ul>
-                            </div>
-                        );
-                    case 'waitlist':
-                        return React.createElement(WaitlistForm);
-                    default:
-                        return (
-                            <div style={{ color: '#000', lineHeight: '1.6' }}>
-                                <p style={{ marginBottom: '1em' }}>crypto-native creative studio connecting people and ideas in unexpected ways</p>
-                                <p style={{ marginBottom: '0' }}>join the <button onClick={() => setActiveDialog('waitlist')} style={{ background: 'none', border: 'none', color: '#0000EE', textDecoration: 'underline', fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>waitlist</button> and follow us on <a href="https://x.com/0xninetynine" target="_blank" rel="noopener noreferrer" style={{ color: '#0000EE', textDecoration: 'underline' }}>twitter</a> for updates and new releases</p>
-                            </div>
-                        );
-                }
-            };
-
-            return (
-                <div className="fixed-container">
-                    <div className="main-window">
-                        <div className="window-bar">
-                            <div className="window-titlebar-text">welcome</div>
-                        </div>
-                        <div className="window-content">
-                            <div style={{ textAlign: 'left' }}>
-                                <h1 style={{ fontSize: '28px', marginBottom: '10px', fontWeight: 'normal' }}>ninetynine labs</h1>
-                            </div>
-                            
-                            <div style={{ display: 'flex', gap: '4px' }}>
-                                <button 
-                                    onClick={() => handleButtonClick('drops')}
-                                    className="retro-button"
-                                    style={{
-                                        backgroundColor: activeDialog === 'drops' ? '#0000EE' : '#d4d4d4',
-                                        color: activeDialog === 'drops' ? '#ffffff' : '#000',
-                                        width: 'auto',
-                                        flex: 1
-                                    }}
-                                >
-                                    drops
-                                </button>
-                                <button 
-                                    onClick={() => handleButtonClick('lore')}
-                                    className="retro-button"
-                                    style={{
-                                        backgroundColor: activeDialog === 'lore' ? '#0000EE' : '#d4d4d4',
-                                        color: activeDialog === 'lore' ? '#ffffff' : '#000',
-                                        width: 'auto',
-                                        flex: 1
-                                    }}
-                                >
-                                    lore
-                                </button>
-                                <button 
-                                    onClick={() => handleButtonClick('waitlist')}
-                                    className="retro-button"
-                                    style={{
-                                        backgroundColor: activeDialog === 'waitlist' ? '#0000EE' : '#d4d4d4',
-                                        color: activeDialog === 'waitlist' ? '#ffffff' : '#000',
-                                        width: 'auto',
-                                        flex: 1
-                                    }}
-                                >
-                                    waitlist
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="dialog-window">
-                        <div className="window-bar">
-                            <div className="window-titlebar-text">
-                                {getDialogTitle(activeDialog)}
-                            </div>
-                            <button 
-                                onClick={handleDialogClose}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#ffffff',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '20px',
-                                    height: '20px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="window-content">
-                            {getDialogContent(activeDialog || 'about')}
-                        </div>
-                    </div>
-                    
-                    <div className="footer">
-                        © 2025 1999 labs. all rights reserved.
-                    </div>
-                </div>
-            );
-        }
-
-        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+        // Initialize
+        showDialog('about');
     </script>
 </body>
 </html>
