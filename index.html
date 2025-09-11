@@ -560,7 +560,7 @@
         });
 
         // Form submission handler with Supabase integration
-        function handleWaitlistSubmit(e) {
+        async function handleWaitlistSubmit(e) {
             e.preventDefault();
             
             if (isSubmitting) return;
@@ -581,52 +581,60 @@
             submitBtn.textContent = '...';
             submitBtn.disabled = true;
             
-            setTimeout(async () => {
-                try {
-                    if (!supabaseClient) {
-                        throw new Error('Database connection not available');
-                    }
+            try {
+                // Initialize Supabase client if not already done
+                if (!supabaseClient) {
+                    console.log('Initializing Supabase client...');
+                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
                     
-                    console.log('Attempting to insert data...');
-                    
-                    const { data, error } = await supabaseClient
-                        .from('ninetynine labs waitlist')
-                        .insert([{
-                            email: email,
-                            eth_address: ethAddress || null,
-                            sol_address: solAddress || null
-                        }]);
-                    
-                    if (error) {
-                        console.error('Supabase error:', JSON.stringify(error));
-                        if (error.code === '23505' || error.message.includes('duplicate')) {
-                            submitBtn.textContent = "already on list";
-                        } else {
-                            submitBtn.textContent = "error";
-                        }
+                    if (window.supabase) {
+                        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+                        console.log('Supabase client created successfully');
                     } else {
-                        console.log('Insert successful!', data);
-                        submitBtn.textContent = 'welcome';
-                        document.getElementById('email').value = '';
-                        document.getElementById('eth-address').value = '';
-                        document.getElementById('sol-address').value = '';
+                        throw new Error('Supabase library not loaded');
                     }
-                    
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    submitBtn.textContent = 'error';
-                } finally {
-                    isSubmitting = false;
-                    submitBtn.disabled = false;
-                    
-                    // Reset button text after 2 seconds
-                    setTimeout(() => {
-                        if (submitBtn.textContent !== 'enter') {
-                            submitBtn.textContent = 'enter';
-                        }
-                    }, 2000);
                 }
-            }, 100);
+                
+                console.log('Attempting to insert data...');
+                
+                const { data, error } = await supabaseClient
+                    .from('ninetynine labs waitlist')
+                    .insert([{
+                        email: email,
+                        eth_address: ethAddress || null,
+                        sol_address: solAddress || null
+                    }]);
+                
+                if (error) {
+                    console.error('Supabase error:', JSON.stringify(error));
+                    if (error.code === '23505' || error.message.includes('duplicate')) {
+                        submitBtn.textContent = "already on list";
+                    } else {
+                        submitBtn.textContent = "error";
+                    }
+                } else {
+                    console.log('Insert successful!', data);
+                    submitBtn.textContent = 'welcome';
+                    document.getElementById('email').value = '';
+                    document.getElementById('eth-address').value = '';
+                    document.getElementById('sol-address').value = '';
+                }
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                submitBtn.textContent = 'error';
+            } finally {
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                
+                // Reset button text after 2 seconds
+                setTimeout(() => {
+                    if (submitBtn.textContent !== 'enter') {
+                        submitBtn.textContent = 'enter';
+                    }
+                }, 2000);
+            }
         }
 
         // Initialize - make sure about section shows by default
