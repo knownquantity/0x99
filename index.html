@@ -554,7 +554,7 @@
             document.getElementById('product-window').classList.add('hidden');
         }
 
-        // Form submission with working Supabase
+        // Form submission handler
         function handleWaitlistSubmit(e) {
             e.preventDefault();
             
@@ -565,6 +565,8 @@
             const solAddress = document.getElementById('sol-address').value.trim();
             const submitBtn = document.getElementById('submit-btn');
             
+            console.log(`Form submission attempt with email: ${email}`);
+            
             if (!email) {
                 alert('Please enter an email address');
                 return;
@@ -574,11 +576,13 @@
             submitBtn.textContent = '...';
             submitBtn.disabled = true;
             
-            setTimeout(async function() {
+            setTimeout(async () => {
                 try {
                     if (!supabaseClient) {
-                        throw new Error('Database not ready');
+                        throw new Error('Database connection not available');
                     }
+                    
+                    console.log('Attempting to insert data...');
                     
                     const { data, error } = await supabaseClient
                         .from('ninetynine labs waitlist')
@@ -589,14 +593,14 @@
                         }]);
                     
                     if (error) {
-                        console.error('DB error:', error);
+                        console.error('Supabase error:', JSON.stringify(error));
                         if (error.code === '23505' || error.message.includes('duplicate')) {
                             submitBtn.textContent = "already on list";
                         } else {
                             submitBtn.textContent = "error";
                         }
                     } else {
-                        console.log('Success:', data);
+                        console.log('Insert successful!', data);
                         submitBtn.textContent = 'welcome';
                         document.getElementById('email').value = '';
                         document.getElementById('eth-address').value = '';
@@ -604,13 +608,14 @@
                     }
                     
                 } catch (error) {
-                    console.error('Failed:', error);
+                    console.error('Submission error:', error);
                     submitBtn.textContent = 'error';
                 } finally {
                     isSubmitting = false;
                     submitBtn.disabled = false;
                     
-                    setTimeout(function() {
+                    // Reset button text after 2 seconds
+                    setTimeout(() => {
                         if (submitBtn.textContent !== 'enter') {
                             submitBtn.textContent = 'enter';
                         }
