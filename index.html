@@ -25,9 +25,6 @@
     <link rel="apple-touch-icon" href="./faviconv3.png">
     <link rel="shortcut icon" href="./faviconv3.png" type="image/png">
     
-    <!-- External Scripts - Only Supabase -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
     <style>
         body {
             margin: 0;
@@ -322,15 +319,15 @@
                 </div>
                 
                 <div style="display: flex; gap: 4px;">
-                    <button class="retro-button" data-dialog="drops" style="width: auto; flex: 1;">drops</button>
-                    <button class="retro-button" data-dialog="lore" style="width: auto; flex: 1;">lore</button>
-                    <button class="retro-button" data-dialog="waitlist" style="width: auto; flex: 1;">waitlist</button>
+                    <button class="retro-button" onclick="showDialog('drops')" style="width: auto; flex: 1;">drops</button>
+                    <button class="retro-button" onclick="showDialog('lore')" style="width: auto; flex: 1;">lore</button>
+                    <button class="retro-button" onclick="showDialog('waitlist')" style="width: auto; flex: 1;">waitlist</button>
                 </div>
             </div>
         </div>
         
-        <!-- Dialog Window -->
-        <div class="dialog-window">
+        <!-- Second Dialog Window -->
+        <div class="dialog-window" id="main-dialog">
             <div class="window-bar">
                 <div class="window-titlebar-text" id="dialog-title">about</div>
                 <button onclick="showDialog('about')" style="background: none; border: none; color: #ffffff; display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; cursor: pointer;">✕</button>
@@ -353,28 +350,28 @@
                     <div style="color: #000; line-height: 1.6;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                capture the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">bag</button>
+                                capture the <button onclick="showProduct('bag')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">bag</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                hit <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">ctrl+enter</button>
+                                hit <button onclick="showProduct('ctrl-enter')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">ctrl+enter</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                receive a <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">handoff</button>
+                                receive a <button onclick="showProduct('handoff')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">handoff</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                send <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">mixed messages</button>
+                                send <button onclick="showProduct('mixed-messages')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">mixed messages</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                build <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">rapport</button>
+                                build <button onclick="showProduct('rapport')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">rapport</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                make the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">callsheet</button>
+                                make the <button onclick="showProduct('callsheet')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">callsheet</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                find your <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">clique</button>
+                                find your <button onclick="showProduct('clique')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">clique</button>
                             </div>
                             <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;">
-                                hang in the <button onclick="showDialog('waitlist')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">atelier</button>
+                                hang in the <button onclick="showProduct('atelier')" style="background: none; border: none; color: #0000EE; text-decoration: underline; font-family: inherit; cursor: pointer; padding: 0;">atelier</button>
                             </div>
                         </div>
                     </div>
@@ -423,6 +420,23 @@
             </div>
         </div>
         
+        <!-- Third Window for Product Details -->
+        <div class="dialog-window hidden" id="product-window">
+            <div class="window-bar">
+                <div class="window-titlebar-text" id="product-title">product</div>
+                <button onclick="hideProduct()" style="background: none; border: none; color: #ffffff; display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; cursor: pointer;">✕</button>
+            </div>
+            <div class="window-content">
+                <div style="color: #000; line-height: 1.6;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 4px;">
+                        <div style="border: 2px outset #e5e5e5; background-color: #d4d4d4; padding: 8px; font-size: 14px; line-height: 1.6;" id="product-description">
+                            <!-- Product description will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Footer -->
         <div class="footer">
             © 2025 1999 labs. all rights reserved.
@@ -430,69 +444,81 @@
     </div>
 
     <script>
-        let supabaseClient = null;
+        // Store form data in memory (no browser storage used)
+        let formSubmissions = [];
         let currentDialog = 'about';
         let isSubmitting = false;
 
-        // Initialize Supabase
-        window.addEventListener('load', () => {
-            console.log('Page loaded, initializing...');
-            
-            setTimeout(() => {
-                try {
-                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
-                    
-                    if (window.supabase) {
-                        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                        console.log('Supabase client initialized');
-                    } else {
-                        console.error('Supabase library not loaded');
-                    }
-                } catch (error) {
-                    console.error('Failed to initialize Supabase:', error);
-                }
-            }, 500);
-        });
-
-        // Dialog management
+        // Main dialog management
         function showDialog(type) {
             currentDialog = type;
             
-            // Hide all content
+            // Hide all dialog content
             document.querySelectorAll('.dialog-content').forEach(el => {
                 el.classList.add('hidden');
             });
             
             // Show selected content
-            document.getElementById(`${type}-content`).classList.remove('hidden');
+            const targetContent = document.getElementById(`${type}-content`);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
             
             // Update title
             document.getElementById('dialog-title').textContent = type;
             
-            // Update button states
-            document.querySelectorAll('.retro-button[data-dialog]').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            if (type !== 'about') {
-                document.querySelector(`[data-dialog="${type}"]`)?.classList.add('active');
+            // Hide product window when switching main dialogs
+            hideProduct();
+        }
+
+        // Product window management with corrected descriptions
+        function showProduct(productType) {
+            const products = {
+                'bag': {
+                    title: 'capture the bag',
+                    description: 'memetic arcade game where players compete to capture and hold a digital pot of sol'
+                },
+                'ctrl-enter': {
+                    title: 'ctrl+enter',
+                    description: 'distribution network for tech\'s main characters'
+                },
+                'handoff': {
+                    title: 'handoff',
+                    description: 'social experiment testing the strength of word-of-mouth distribution mechanics and intention-driven rituals'
+                },
+                'mixed-messages': {
+                    title: 'mixed messages',
+                    description: 'collective emotional api for navigating the messiness of being alive, online and in between'
+                },
+                'rapport': {
+                    title: 'rapport',
+                    description: 'social graphs built on the idea that connection is more art than algorithm'
+                },
+                'callsheet': {
+                    title: 'callsheet',
+                    description: 'onchain marketing primitive built on airdrop infrastructure'
+                },
+                'clique': {
+                    title: 'clique',
+                    description: 'software for who you want to be around'
+                },
+                'atelier': {
+                    title: 'atelier',
+                    description: 'digital workshop for culture in progress'
+                }
+            };
+
+            const product = products[productType];
+            if (product) {
+                document.getElementById('product-title').textContent = product.title;
+                document.getElementById('product-description').textContent = product.description;
+                document.getElementById('product-window').classList.remove('hidden');
             }
         }
 
-        // Button click handlers
-        document.querySelectorAll('.retro-button[data-dialog]').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const dialogType = e.target.getAttribute('data-dialog');
-                
-                // If clicking the same dialog button, close it (go to about)
-                if (currentDialog === dialogType) {
-                    showDialog('about');
-                } else {
-                    showDialog(dialogType);
-                }
-            });
-        });
+        function hideProduct() {
+            document.getElementById('product-window').classList.add('hidden');
+        }
 
         // Enable/disable submit button based on email input
         function updateSubmitButton() {
@@ -514,7 +540,7 @@
             }
         });
 
-        // Form submission handler
+        // Form submission handler (demo version - stores in memory only)
         function handleWaitlistSubmit(e) {
             e.preventDefault();
             
@@ -532,40 +558,37 @@
                 return;
             }
             
+            // Check if email already exists in memory
+            const existingSubmission = formSubmissions.find(sub => sub.email === email);
+            if (existingSubmission) {
+                submitBtn.textContent = "already on list";
+                setTimeout(() => {
+                    submitBtn.textContent = 'enter';
+                }, 2000);
+                return;
+            }
+            
             isSubmitting = true;
             submitBtn.textContent = '...';
             submitBtn.disabled = true;
             
-            setTimeout(async () => {
+            setTimeout(() => {
                 try {
-                    if (!supabaseClient) {
-                        throw new Error('Database connection not available');
-                    }
+                    // Store in memory (demo version)
+                    formSubmissions.push({
+                        email: email,
+                        eth_address: ethAddress || null,
+                        sol_address: solAddress || null,
+                        timestamp: new Date().toISOString()
+                    });
                     
-                    console.log('Attempting to insert data...');
+                    console.log('Submission successful!', formSubmissions);
+                    submitBtn.textContent = 'welcome';
                     
-                    const { data, error } = await supabaseClient
-                        .from('ninetynine labs waitlist')
-                        .insert([{
-                            email: email,
-                            eth_address: ethAddress || null,
-                            sol_address: solAddress || null
-                        }]);
-                    
-                    if (error) {
-                        console.error('Supabase error:', JSON.stringify(error));
-                        if (error.code === '23505' || error.message.includes('duplicate')) {
-                            submitBtn.textContent = "already on list";
-                        } else {
-                            submitBtn.textContent = "error";
-                        }
-                    } else {
-                        console.log('Insert successful!', data);
-                        submitBtn.textContent = 'welcome';
-                        document.getElementById('email').value = '';
-                        document.getElementById('eth-address').value = '';
-                        document.getElementById('sol-address').value = '';
-                    }
+                    // Clear form
+                    document.getElementById('email').value = '';
+                    document.getElementById('eth-address').value = '';
+                    document.getElementById('sol-address').value = '';
                     
                 } catch (error) {
                     console.error('Submission error:', error);
@@ -581,7 +604,7 @@
                         }
                     }, 2000);
                 }
-            }, 100);
+            }, 1000);
         }
 
         // Initialize
