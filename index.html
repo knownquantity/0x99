@@ -449,9 +449,15 @@
         let currentDialog = 'about';
         let isSubmitting = false;
 
-        // Main dialog management
+        // Main dialog management with toggle functionality
         function showDialog(type) {
-            currentDialog = type;
+            // If clicking the same button that's already active, go back to about
+            if (currentDialog === type && type !== 'about') {
+                currentDialog = 'about';
+                type = 'about';
+            } else {
+                currentDialog = type;
+            }
             
             // Hide all dialog content
             document.querySelectorAll('.dialog-content').forEach(el => {
@@ -466,6 +472,19 @@
             
             // Update title
             document.getElementById('dialog-title').textContent = type;
+            
+            // Update button highlighting
+            document.querySelectorAll('.retro-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Highlight the active button (only for drops, lore, waitlist)
+            if (['drops', 'lore', 'waitlist'].includes(type)) {
+                const activeButton = document.querySelector(`[onclick="showDialog('${type}')"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+            }
             
             // Hide product window when switching main dialogs
             hideProduct();
@@ -540,7 +559,7 @@
             }
         });
 
-        // Form submission handler (demo version - stores in memory only)
+        // Form submission handler with Supabase integration
         function handleWaitlistSubmit(e) {
             e.preventDefault();
             
@@ -558,37 +577,40 @@
                 return;
             }
             
-            // Check if email already exists in memory
-            const existingSubmission = formSubmissions.find(sub => sub.email === email);
-            if (existingSubmission) {
-                submitBtn.textContent = "already on list";
-                setTimeout(() => {
-                    submitBtn.textContent = 'enter';
-                }, 2000);
-                return;
-            }
-            
             isSubmitting = true;
             submitBtn.textContent = '...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
-                    // Store in memory (demo version)
-                    formSubmissions.push({
-                        email: email,
-                        eth_address: ethAddress || null,
-                        sol_address: solAddress || null,
-                        timestamp: new Date().toISOString()
-                    });
+                    if (!supabaseClient) {
+                        throw new Error('Database connection not available');
+                    }
                     
-                    console.log('Submission successful!', formSubmissions);
-                    submitBtn.textContent = 'welcome';
+                    console.log('Attempting to insert data...');
                     
-                    // Clear form
-                    document.getElementById('email').value = '';
-                    document.getElementById('eth-address').value = '';
-                    document.getElementById('sol-address').value = '';
+                    const { data, error } = await supabaseClient
+                        .from('ninetynine labs waitlist')
+                        .insert([{
+                            email: email,
+                            eth_address: ethAddress || null,
+                            sol_address: solAddress || null
+                        }]);
+                    
+                    if (error) {
+                        console.error('Supabase error:', JSON.stringify(error));
+                        if (error.code === '23505' || error.message.includes('duplicate')) {
+                            submitBtn.textContent = "already on list";
+                        } else {
+                            submitBtn.textContent = "error";
+                        }
+                    } else {
+                        console.log('Insert successful!', data);
+                        submitBtn.textContent = 'welcome';
+                        document.getElementById('email').value = '';
+                        document.getElementById('eth-address').value = '';
+                        document.getElementById('sol-address').value = '';
+                    }
                     
                 } catch (error) {
                     console.error('Submission error:', error);
@@ -604,11 +626,18 @@
                         }
                     }, 2000);
                 }
-            }, 1000);
+            }, 100);
         }
 
-        // Initialize
-        showDialog('about');
+        // Initialize - make sure about section shows by default
+        document.addEventListener('DOMContentLoaded', () => {
+            showDialog('about');
+            
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('input', updateSubmitButton);
+            }
+        });
     </script>
 </body>
 </html>
