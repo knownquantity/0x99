@@ -582,21 +582,12 @@
             submitBtn.disabled = true;
             
             try {
-                // Initialize Supabase client if not already done
                 if (!supabaseClient) {
-                    console.log('Initializing Supabase client...');
-                    const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
-                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
-                    
-                    if (window.supabase) {
-                        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                        console.log('Supabase client created successfully');
-                    } else {
-                        throw new Error('Supabase library not loaded');
-                    }
+                    console.error('Supabase client not initialized');
+                    throw new Error('Database connection not available');
                 }
                 
-                console.log('Attempting to insert data...');
+                console.log('Attempting to insert data to Supabase...');
                 
                 const { data, error } = await supabaseClient
                     .from('ninetynine labs waitlist')
@@ -607,7 +598,7 @@
                     }]);
                 
                 if (error) {
-                    console.error('Supabase error:', JSON.stringify(error));
+                    console.error('Supabase error:', error);
                     if (error.code === '23505' || error.message.includes('duplicate')) {
                         submitBtn.textContent = "already on list";
                     } else {
