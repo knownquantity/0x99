@@ -443,11 +443,26 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/supabase.min.js"></script>
     <script>
-        // Store form data in memory (no browser storage used)
-        let formSubmissions = [];
         let currentDialog = 'about';
         let isSubmitting = false;
+        let supabaseClient = null;
+
+        // Initialize Supabase immediately
+        (function() {
+            try {
+                const supabaseUrl = 'https://jzxmdagyfxylqefpikrr.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eG1kYWd5Znh5bHFlZnBpa3JyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mjc4MzgsImV4cCI6MjA2ODEwMzgzOH0.HO17RKaz5z_7zVGlaMP3CQHSbNnzH2oyD9kffM5eCVE';
+                
+                if (typeof supabase !== 'undefined') {
+                    supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                    console.log('Supabase initialized successfully');
+                }
+            } catch (error) {
+                console.error('Supabase initialization failed:', error);
+            }
+        })();
 
         // Main dialog management with toggle functionality
         function showDialog(type) {
@@ -490,7 +505,7 @@
             hideProduct();
         }
 
-        // Product window management with corrected descriptions
+        // Product window management
         function showProduct(productType) {
             const products = {
                 'bag': {
@@ -539,27 +554,7 @@
             document.getElementById('product-window').classList.add('hidden');
         }
 
-        // Enable/disable submit button based on email input
-        function updateSubmitButton() {
-            const email = document.getElementById('email').value.trim();
-            const submitBtn = document.getElementById('submit-btn');
-            
-            if (email) {
-                submitBtn.disabled = false;
-            } else {
-                submitBtn.disabled = true;
-            }
-        }
-
-        // Add event listener to email input
-        document.addEventListener('DOMContentLoaded', () => {
-            const emailInput = document.getElementById('email');
-            if (emailInput) {
-                emailInput.addEventListener('input', updateSubmitButton);
-            }
-        });
-
-        // Form submission handler with Supabase integration
+        // Form submission with working Supabase
         async function handleWaitlistSubmit(e) {
             e.preventDefault();
             
@@ -569,8 +564,6 @@
             const ethAddress = document.getElementById('eth-address').value.trim();
             const solAddress = document.getElementById('sol-address').value.trim();
             const submitBtn = document.getElementById('submit-btn');
-            
-            console.log(`Form submission attempt with email: ${email}`);
             
             if (!email) {
                 alert('Please enter an email address');
@@ -583,29 +576,25 @@
             
             try {
                 if (!supabaseClient) {
-                    console.error('Supabase client not initialized');
-                    throw new Error('Database connection not available');
+                    throw new Error('Database not available');
                 }
-                
-                console.log('Attempting to insert data to Supabase...');
                 
                 const { data, error } = await supabaseClient
                     .from('ninetynine labs waitlist')
-                    .insert([{
+                    .insert({
                         email: email,
                         eth_address: ethAddress || null,
                         sol_address: solAddress || null
-                    }]);
+                    });
                 
                 if (error) {
-                    console.error('Supabase error:', error);
-                    if (error.code === '23505' || error.message.includes('duplicate')) {
+                    console.error('Database error:', error);
+                    if (error.code === '23505') {
                         submitBtn.textContent = "already on list";
                     } else {
                         submitBtn.textContent = "error";
                     }
                 } else {
-                    console.log('Insert successful!', data);
                     submitBtn.textContent = 'welcome';
                     document.getElementById('email').value = '';
                     document.getElementById('eth-address').value = '';
@@ -613,13 +602,12 @@
                 }
                 
             } catch (error) {
-                console.error('Submission error:', error);
+                console.error('Submission failed:', error);
                 submitBtn.textContent = 'error';
             } finally {
                 isSubmitting = false;
                 submitBtn.disabled = false;
                 
-                // Reset button text after 2 seconds
                 setTimeout(() => {
                     if (submitBtn.textContent !== 'enter') {
                         submitBtn.textContent = 'enter';
@@ -628,7 +616,14 @@
             }
         }
 
-        // Initialize - make sure about section shows by default
+        // Enable/disable submit button based on email input
+        function updateSubmitButton() {
+            const email = document.getElementById('email').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = !email;
+        }
+
+        // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
             showDialog('about');
             
